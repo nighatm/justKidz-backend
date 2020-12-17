@@ -371,6 +371,9 @@ def message():
         createdAt=None
         message_info={}
         loginToken = request.json.get("loginToken")
+        message_to = request.json.get("message_to")
+        message_from = None
+        message_subject = request.json.get("subject")
         message_content = request.json.get("message")
         try:
             conn = mariadb.connect(host=dbcreds.host, port=dbcreds.port,user=dbcreds.user, password=dbcreds.password,database=dbcreds.database)
@@ -379,10 +382,9 @@ def message():
             user=cursor.fetchall()
             print(user)
             if user !=None:
-                cursor.execute("INSERT INTO message_center(userId, message) VALUES(?,?)", [user[0][0],message_content, ])
+                cursor.execute("INSERT INTO message_center(userId, message_to, subject, message ) VALUES(?,?,?,?)", [user[0][0], message_to, message_subject, message_content,  ])
                 conn.commit()
                 rows= cursor.rowcount      
-                print (tweetId)
         except mariadb.ProgrammingError as error:
                 print("Programming Error.. ")
                 print(error)
@@ -404,6 +406,9 @@ def message():
             if(rows==1):
                 message_info={
                     "userId" : user[0][0] ,
+                    "to" : message_to,
+                    "from" : message_from,
+                    "subject" : message_subject,
                     "content": message_content,
                     "createdAt" :createdAt ,
                     "username": user[0][1],
