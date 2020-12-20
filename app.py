@@ -313,7 +313,7 @@ def message():
         rows = None
         message_info=[]
         message_dict={}
-        loginToken = request.args.get("loginToken")
+        loginToken = request.headers.get("loginToken")
         
         try:
             conn = mariadb.connect(host=dbcreds.host, port=dbcreds.port,user=dbcreds.user, password=dbcreds.password,database=dbcreds.database)
@@ -324,7 +324,7 @@ def message():
             user_id = user[0][0]
             
             if user_id != None:
-                cursor.execute("SELECT m.id, m.userId, m.createdAt, m.to, m.from , m.subject, m.message FROM message_center m INNER JOIN user u ON m.userId = u.id WHERE u.id=?", [user_id, ])
+                cursor.execute("SELECT m.id, m.userId, m.createdAt, m.message_to, m.message_from , m.subject, m.message FROM message_center m INNER JOIN user u ON m.userId = u.id WHERE u.id=?", [user_id, ])
                 rows = cursor.fetchall()
             print (rows)
         except mariadb.ProgrammingError as error:
@@ -685,7 +685,7 @@ def activity():
             conn = mariadb.connect(host=dbcreds.host, port=dbcreds.port,user=dbcreds.user, password=dbcreds.password,database=dbcreds.database)
             cursor=conn.cursor()
             if user_id == None:
-                cursor.execute("SELECT * FROM activity a INNER JOIN user u ON e.userId = u.id")
+                cursor.execute("SELECT * FROM activity a INNER JOIN user u ON a.userId = u.id")
             else:
                 cursor.execute("SELECT * FROM activity a INNER JOIN user u ON a.userId = u.id WHERE u.id=?", [user_id, ])
             rows = cursor.fetchall()
