@@ -711,7 +711,7 @@ def activity():
             if(rows!= None):
                 for row in rows:
                     report_dict={
-                        "reportId": row[0], 
+                        "activityId": row[0], 
                         "userId" : row[1],
                         "activityType": row[2],
                         "activityName": row[3],
@@ -924,7 +924,7 @@ def report():
                 return Response(json.dumps(report_info, default=str), mimetype="application/json", status=200)
             else:
                 return Response("Something went wrong!", mimetype="text/html", status=500)
-    # CREATE A NEW ACTIVITY
+    # CREATE A NEW REPORT
     # JSON DATA AS PARAMS(loginToken, classroom, actions )
 
     elif request.method == 'POST':
@@ -979,7 +979,7 @@ def report():
             else:
                 return Response("Something went wrong!", mimetype="text/html", status=500)
 
-# UPDATE AN ACTIVITY (works)
+# UPDATE AN REPORT (works)
 # JSON DATA AS PARAMS(loginToken, reportId, classroom, actions )
 
     elif request.method == 'PATCH':
